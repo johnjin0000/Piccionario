@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= set.title
+  br
+  h4 Created by #{author}
+  hr
+  h4 The vocab words are:
+  p= set.words
+  br
+  a.btn.btn-primary(href='/sets/play/'+set._id) Play this set
+  
+  
+
+  

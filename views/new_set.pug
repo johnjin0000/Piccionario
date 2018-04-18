@@ -1,0 +1,39 @@
+extends layout
+
+block content
+    style.
+      .feed {padding: 5px 0}
+    h1 Add New Set
+    br
+    form(method='POST', action='/sets/add')
+      .form-group
+        label Titile:
+        input.form-control(name = 'title', type = 'text', size='50')
+      .form-group
+        label Add Word:
+          #newword
+            .form-group.feed
+              input.form-control(type='text', name='word', size='50')
+      p
+        br
+        input.btn.btn-primary(type='submit', name='submit1')
+        input.btn.btn-danger(type='reset', name='reset1')
+      p#addnew
+        a(href='javascript:add_feed()') Add New Word
+    // Template. This whole data will be added directly to working form above
+    #newwordtpl(style='display:none')
+      .form-group
+        label Add Word:
+          .form-group.feed
+            input.form-control(type='text', name='word', value='', size='50')
+
+    script(type='text/javascript').
+      function add_feed()
+      {
+      var div1 = document.createElement('div');
+      // Get template data
+      div1.innerHTML = document.getElementById('newwordtpl').innerHTML;
+      // append to our form, so that template data
+      //become part of form
+      document.getElementById('newword').appendChild(div1);
+      }

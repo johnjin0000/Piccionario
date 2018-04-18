@@ -1,0 +1,85 @@
+extends layout
+block content
+  h2= set.title
+  h5 This set is by #{author} with the set id
+  p#setId= set._id
+  br
+  h4 Your user name is:                        
+  h5#username #{user} 
+  br
+  h4 Current Artist: <button type="button" class="btn btn-primary","changeArtist">Change Artist</button>                    
+  h4#artist 
+  script(src='/libraries/p5.js')
+  script(src='/libraries/p5.dom.js')
+  script(src='/libraries/p5.sound.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js')
+  script(src='/js/sketch.js')
+  .container
+      .col-md-2
+        .well
+          h4 Online Users
+          ul.list-group#users
+      .col-md-3
+        .chat#chat        
+        form#messageForm
+          .form-group
+            label Enter Message 
+            textarea.form-control#message
+            br
+            input.btn.btn-primary(type = 'submit', value = 'Send Message') 
+      .col-md-6
+        #sketch 
+  style.
+    #chat{
+      overflow-y :auto;
+      height: 300px;
+      }
+  script.
+    var socket = io('http://localhost:4000');
+    var room = $("#setId").text(); 
+    socket.on('connect', function(){
+      socket.emit('roomfixer', room);
+    });
+    var $messageForm = $('#messageForm');
+    var $message = $('#message');
+    var $chat = $('#chat');
+    var $username = $('#username');
+    var $users = $('#users');
+    var $artist = $('#artist');
+    var roomUsers;
+    var drawer= '';
+    
+    $('button').click(function(){
+      drawer = roomUsers[Math.floor(Math.random()*roomUsers.length)];
+      socket.emit('changeArtist', drawer);
+    });
+    
+    socket.on('getArtist', function(data){
+      $artist.html(data);
+    });
+    
+    $messageForm.submit(function(e){
+      e.preventDefault();
+      socket.emit('send message', $message.val());
+      $message.val('');
+    });
+    
+    socket.on('new message', function (data){
+      $chat.append('<h5><strong>'+data.user+'</strong>: ' + data.msg + '</h5>');
+    });
+    
+    socket.emit('new user', $username.text());
+    
+    
+    socket.on('get users', function(data){
+      var html = '';
+      for (i = 0; i < data.length; i++){
+        html += '<li class= "list-group-item">'+data[i]+'</li>';
+      }
+      roomUsers = data;
+      $users.html(html);
+    });
+    
+    
+    
+    

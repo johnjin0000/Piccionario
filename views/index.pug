@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  img(src="/images/logo.png", alt="Logo")
+  br
+  h4 Play pictionary with a set of vocabulary words here or make your own!
+  ul.list-group
+    each set, i in sets
+      li.list-group-item 
+        a(href="/sets/"+set._id)= set.title
+  
+  
