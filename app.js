@@ -169,6 +169,6 @@ app.use('/sets', sets);
 
 
 //Start Server
-const server =  http.listen(process.env.Port || 4000, function(){
-  console.log('Server started on port 4000...');
+const server =  http.listen(80, function(){
+  console.log('Server started on port 80...');
 });
